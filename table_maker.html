@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<style>
+	#measure {border: 1px solid black;
+	border-collapse: collapse;}
+</style>
+<table id="measure"></table>
+<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+<script>
+if(annyang){
+console.log('hello');
+
+var entries = document.getElementById('measure');
+
+var material ={
+":length :unit":{'regexp': /^([0-9]*) (mm|millimetre|kilo|kg|kilogram)$/, 'callback': function(length,unit){
+if(entries.rows.length === 0) 
+{
+	entries.insertRow(-1);
+	for(i=0;i<2;i++)
+ 	{
+ 		var cell = 	entries.rows[entries.rows.length - 1].insertCell(-1);
+ 	}
+	fill_node(entries.rows.length - 1,unit,length);
+}
+else{
+	if((/^(mm|millimetre)$/.test(unit) && elementIsEmpty(entries.rows[entries.rows.length - 1].cells[0])) || (/^(kilogram|kg|kilo)$/.test(unit) && elementIsEmpty(entries.rows[entries.rows.length - 1].cells[1])))
+		fill_node(entries.rows.length - 1,unit,length);
+	else
+	{
+		entries.insertRow(-1);
+		for(i=0;i<2;i++)
+ 		{
+ 			var cell = 	entries.rows[entries.rows.length - 1].insertCell(-1);
+ 		}
+		fill_node(entries.rows.length - 1,unit,length);		
+	}
+ 	
+}
+
+
+
+}}
+};
+
+function fill_node(r_index,value_unit,value_length)
+{
+	if(/^(mm|millimetre)$/.test(value_unit))
+	{
+		entries.rows[r_index].cells[0].innerHTML = value_length;
+	}
+	else if (/^(kilo|kg|kilogram)$/.test(value_unit)) 
+	{
+		console.log(entries.rows.length);
+		entries.rows[r_index].cells[1].innerHTML = value_length;
+	}
+
+}
+
+function elementIsEmpty(el) {
+    return /^(\s|&nbsp;)*$/.test(el.innerHTML);
+}
+
+var update_row_count = function(){entries.rows.length;};
+annyang.addCommands(material);
+annyang.start();
+annyang.debug(newState=true);
+}
+</script>
+</body>
+</html>
